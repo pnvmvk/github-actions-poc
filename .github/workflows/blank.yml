@@ -89,9 +89,8 @@ jobs:
     
     - name: Deploy to Sandbox
       env:
-        USERNAME: ${{ secrets.anypoint_cicd_username }}
-        PASSWORD: ${{ secrets.anypoint_cicd_password }}
-        DECRYPTION_KEY: ${{ secrets.decryption_key }}
+        USERNAME: ${{ secrets.mule_username }}
+        PASSWORD: ${{ secrets.mule_password }}
       run: |
         artifactName=$(ls *.jar | head -1)
         mvn deploy -DmuleDeploy \
@@ -99,13 +98,4 @@ jobs:
          -Danypoint.username="$USERNAME" \
          -Danypoint.password="$PASSWORD" \
          -Denv=Sandbox \
-         -Ddecryption.key="$DECRYPTION_KEY" \
          -DskipTests
-         
-    - name: Notify Slack
-      uses: act10ns/slack@v1.2.2
-      with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#github-actions-notifications'
-      if: always()
